@@ -59,11 +59,13 @@ Create a `.env` file in the backend directory:
 PORT=4000
 MONGO_URI=your_mongodb_connection_string_here
 JWT_SECRET=your_super_secret_jwt_key_here_minimum_32_characters_long
+BACKEND_URL=https://your-render-app.onrender.com
 ```
 
 **Important:** Replace the values with:
 - Your actual MongoDB connection string from MongoDB Atlas
 - A secure JWT secret key (at least 32 characters)
+- Your Render backend URL (e.g., `https://your-app-name.onrender.com`) - this enables self-ping to keep the server alive
 
 ### 3. Frontend Setup
 
@@ -224,6 +226,32 @@ All task routes require `Authorization: Bearer <token>` header.
 │
 └── README.md
 ```
+
+## Deployment
+
+### Render Deployment
+
+The application includes a self-ping feature to prevent the backend from sleeping on Render's free tier.
+
+**Backend Deployment:**
+1. Push your code to GitHub
+2. Create a new Web Service on Render
+3. Connect your repository
+4. Set the following:
+   - Build Command: `npm install`
+   - Start Command: `npm start`
+5. Add environment variables in Render dashboard:
+   - `MONGO_URI`: Your MongoDB connection string
+   - `JWT_SECRET`: Your secure JWT secret
+   - `BACKEND_URL`: Your Render backend URL (e.g., `https://your-app.onrender.com`)
+6. Deploy
+
+The self-ping feature will automatically ping the `/api/health` endpoint every 14 minutes to keep the server active.
+
+**Frontend Deployment:**
+1. Update the `proxy` in `frontend/package.json` to your Render backend URL
+2. Build the frontend: `npm run build`
+3. Deploy the build folder to Netlify, Vercel, or Render static site
 
 ## Security Features
 
